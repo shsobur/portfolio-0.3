@@ -6,6 +6,8 @@ import {
   FiFacebook,
   FiCheckCircle,
   FiX,
+  FiLoader,
+  FiAlertCircle,
 } from "react-icons/fi";
 import { FaWhatsapp } from "react-icons/fa";
 import { QRCodeSVG } from "qrcode.react";
@@ -21,14 +23,16 @@ const fadeUp = (delay = 0) => ({
 const Contact = () => {
   const form = useRef();
   const [isSuccess, setIsSuccess] = useState(false);
+  const [isError, setIsError] = useState(false); // Custom error state
+  const [isSending, setIsSending] = useState(false); // Loading state
   const [showQR, setShowQR] = useState(false);
 
-  // CHANGE THIS TO YOUR ACTUAL NUMBER
-  const whatsappNumber = "+880 1991677898";
+  const whatsappNumber = "+8801991677898";
   const whatsappLink = `https://wa.me/${whatsappNumber}`;
 
   const sendEmail = (e) => {
     e.preventDefault();
+    setIsSending(true); // Start loading
 
     emailjs
       .sendForm(
@@ -37,17 +41,18 @@ const Contact = () => {
         form.current,
         import.meta.env.VITE_USER_ID,
       )
-      .then(
-        () => {
-          setIsSuccess(true);
-          setTimeout(() => setIsSuccess(false), 5000);
-          e.target.reset();
-        },
-        (error) => {
-          console.log("FAILED...", error.text);
-          alert("Something went wrong. Please try again.");
-        },
-      );
+      .then(() => {
+        setIsSuccess(true);
+        setIsSending(false);
+        setTimeout(() => setIsSuccess(false), 5000);
+        e.target.reset();
+      })
+      .catch((error) => {
+        console.log("FAILED...", error.text);
+        setIsSending(false);
+        setIsError(true);
+        setTimeout(() => setIsError(false), 5000);
+      });
   };
 
   return (
@@ -55,7 +60,7 @@ const Contact = () => {
       <div className="max-w-7xl w-full mx-auto grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
         {/* LEFT SIDE: Information & Socials */}
         <div className="lg:col-span-5 flex flex-col gap-10">
-          <div className="flex flex-col gap-4 text-center lg:text-left">
+          <div className="flex font-heading flex-col gap-4 text-center lg:text-left">
             <motion.p
               {...fadeUp(0.1)}
               className="text-xs font-bold uppercase tracking-[0.4em] text-purple-600"
@@ -88,10 +93,9 @@ const Contact = () => {
               Have a vision? I have the tools. Send me a message or reach out
               via social media.
             </p>
-
             <div className="flex gap-4">
               {[
-                { icon: <FiFacebook />, link: "#" }, // Add your links here
+                { icon: <FiFacebook />, link: "#" },
                 { icon: <FiInstagram />, link: "#" },
               ].map((social, i) => (
                 <motion.a
@@ -104,8 +108,6 @@ const Contact = () => {
                   {social.icon}
                 </motion.a>
               ))}
-
-              {/* WhatsApp Button */}
               <motion.button
                 onClick={() => setShowQR(true)}
                 whileHover={{ y: -5, scale: 1.1 }}
@@ -139,7 +141,8 @@ const Contact = () => {
                   name="name"
                   placeholder="Name"
                   required
-                  className="w-full px-3 py-2 rounded-lg bg-white/60 border border-white focus:border-purple-400 outline-none transition-all text-sm"
+                  disabled={isSending}
+                  className="w-full px-3 py-2 rounded-lg bg-white/60 border border-white focus:border-purple-400 outline-none transition-all text-sm disabled:opacity-50"
                 />
               </div>
               <div className="flex flex-col gap-2.5">
@@ -151,11 +154,11 @@ const Contact = () => {
                   name="email"
                   placeholder="Email"
                   required
-                  className="w-full px-3 py-2 rounded-lg bg-white/60 border border-white focus:border-purple-400 outline-none transition-all text-sm"
+                  disabled={isSending}
+                  className="w-full px-3 py-2 rounded-lg bg-white/60 border border-white focus:border-purple-400 outline-none transition-all text-sm disabled:opacity-50"
                 />
               </div>
             </div>
-
             <div className="flex flex-col gap-2.5">
               <label className="text-[10px] font-bold uppercase tracking-widest text-gray-400 ml-3">
                 Your Message
@@ -165,32 +168,42 @@ const Contact = () => {
                 rows="5"
                 placeholder="How can I help you stand out?"
                 required
-                className="w-full px-3 py-2 rounded-lg bg-white/60 border border-white focus:border-purple-400 outline-none transition-all text-sm resize-none"
+                disabled={isSending}
+                className="w-full px-3 py-2 rounded-lg bg-white/60 border border-white focus:border-purple-400 outline-none transition-all text-sm resize-none disabled:opacity-50"
               ></textarea>
             </div>
 
             <motion.button
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
+              whileHover={!isSending ? { scale: 1.02 } : {}}
+              whileTap={!isSending ? { scale: 0.98 } : {}}
               type="submit"
-              className="flex items-center justify-center gap-3 py-5 rounded-2xl text-white font-bold uppercase tracking-widest text-xs"
+              disabled={isSending}
+              className={`flex items-center justify-center gap-3 py-5 rounded-2xl text-white font-bold uppercase tracking-widest text-xs transition-all ${isSending ? "opacity-70 cursor-not-allowed" : ""}`}
               style={{
                 background: "linear-gradient(135deg, #7c3aed, #ec4899)",
                 boxShadow: "0 10px 30px rgba(124, 58, 237, 0.4)",
               }}
             >
-              Send Proposal <FiSend />
+              {isSending ? (
+                <>
+                  Sending <FiLoader className="animate-spin text-lg" />
+                </>
+              ) : (
+                <>
+                  Send Proposal <FiSend />
+                </>
+              )}
             </motion.button>
           </form>
 
-          {/* Success Overlay */}
+          {/* SUCCESS OVERLAY */}
           <AnimatePresence>
             {isSuccess && (
               <motion.div
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.9 }}
-                className="absolute inset-0 z-20 flex flex-col items-center justify-center rounded-[3.5rem] bg-white/95 backdrop-blur-md text-center p-10"
+                className="absolute inset-0 z-20 flex flex-col items-center justify-center rounded-[1.5rem] bg-white/95 backdrop-blur-md text-center p-10"
               >
                 <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mb-6">
                   <FiCheckCircle className="text-4xl text-green-500" />
@@ -211,10 +224,32 @@ const Contact = () => {
               </motion.div>
             )}
           </AnimatePresence>
+
+          {/* CUSTOM ERROR OVERLAY */}
+          <AnimatePresence>
+            {isError && (
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 10 }}
+                className="absolute inset-x-0 -bottom-20 z-30 flex items-center justify-center"
+              >
+                <div className="bg-red-500 text-white px-6 py-3 rounded-2xl shadow-xl flex items-center gap-3">
+                  <FiAlertCircle size={20} />
+                  <span className="text-xs font-bold tracking-wider uppercase">
+                    Something went wrong. Try again later.
+                  </span>
+                  <button onClick={() => setIsError(false)}>
+                    <FiX />
+                  </button>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </motion.div>
       </div>
 
-      {/* WHATSAPP DIGITAL QR MODAL */}
+      {/* WHATSAPP MODAL remains the same... */}
       <AnimatePresence>
         {showQR && (
           <motion.div
@@ -237,7 +272,6 @@ const Contact = () => {
               >
                 <FiX size={24} />
               </button>
-
               <div className="flex flex-col items-center gap-6">
                 <div className="p-4 bg-gray-50 rounded-[2rem] border-4 border-gray-100 shadow-inner">
                   <QRCodeSVG
@@ -249,7 +283,6 @@ const Contact = () => {
                     bgColor="transparent"
                   />
                 </div>
-
                 <div>
                   <h4 className="text-2xl font-black text-gray-900 tracking-tight">
                     SCAN FOR WHATSAPP
@@ -258,7 +291,6 @@ const Contact = () => {
                     Scan this digital code to start a chat with me instantly.
                   </p>
                 </div>
-
                 <a
                   href={whatsappLink}
                   target="_blank"
