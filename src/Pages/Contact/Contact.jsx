@@ -120,7 +120,7 @@ const Contact = () => {
         {/* RIGHT SIDE: The Glass Form */}
         <motion.div
           {...fadeUp(0.4)}
-          className="lg:col-span-7 relative p-8 md:p-12 rounded-[3.5rem]"
+          className="lg:col-span-7 relative p-8 md:p-10 rounded-[1.5rem]"
           style={{
             background: "rgba(255, 255, 255, 0.4)",
             backdropFilter: "blur(32px)",
@@ -139,7 +139,7 @@ const Contact = () => {
                   name="name"
                   placeholder="Name"
                   required
-                  className="w-full px-7 py-4.5 rounded-2xl bg-white/60 border border-white focus:border-purple-400 outline-none transition-all text-sm"
+                  className="w-full px-3 py-2 rounded-lg bg-white/60 border border-white focus:border-purple-400 outline-none transition-all text-sm"
                 />
               </div>
               <div className="flex flex-col gap-2.5">
@@ -151,7 +151,7 @@ const Contact = () => {
                   name="email"
                   placeholder="Email"
                   required
-                  className="w-full px-7 py-4.5 rounded-2xl bg-white/60 border border-white focus:border-purple-400 outline-none transition-all text-sm"
+                  className="w-full px-3 py-2 rounded-lg bg-white/60 border border-white focus:border-purple-400 outline-none transition-all text-sm"
                 />
               </div>
             </div>
@@ -165,7 +165,7 @@ const Contact = () => {
                 rows="5"
                 placeholder="How can I help you stand out?"
                 required
-                className="w-full px-7 py-4.5 rounded-2xl bg-white/60 border border-white focus:border-purple-400 outline-none transition-all text-sm resize-none"
+                className="w-full px-3 py-2 rounded-lg bg-white/60 border border-white focus:border-purple-400 outline-none transition-all text-sm resize-none"
               ></textarea>
             </div>
 
