@@ -24,7 +24,7 @@ const Navbar = () => {
   useEffect(() => {
     const observerOptions = {
       root: null,
-      rootMargin: "-40% 0px -40% 0px", // Detects when section is in the middle of screen
+      rootMargin: "-40% 0px -40% 0px",
       threshold: 0,
     };
 

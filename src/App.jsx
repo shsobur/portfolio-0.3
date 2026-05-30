@@ -4,6 +4,7 @@ import Home from "./Pages/Home/Home";
 import About from "./Pages/About/About";
 import Navbar from "./Components/Navbar/Navbar";
 import Background from "./Components/Background/Background";
+import Contact from "./Pages/Contact/Contact";
 
 const App = () => {
   useEffect(() => {
@@ -36,8 +37,10 @@ const App = () => {
       <div id="about">
         <About />
       </div>
+      <div id="contact">
+        <Contact></Contact>
+      </div>
       {/* <div id="work"><Work /></div> */}
-      {/* <div id="contact"><Contact /></div> */}
     </Background>
   );
 };
