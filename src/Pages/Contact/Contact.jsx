@@ -23,8 +23,8 @@ const fadeUp = (delay = 0) => ({
 const Contact = () => {
   const form = useRef();
   const [isSuccess, setIsSuccess] = useState(false);
-  const [isError, setIsError] = useState(false); // Custom error state
-  const [isSending, setIsSending] = useState(false); // Loading state
+  const [isError, setIsError] = useState(false);
+  const [isSending, setIsSending] = useState(false);
   const [showQR, setShowQR] = useState(false);
 
   const whatsappNumber = "+8801991677898";
@@ -32,7 +32,7 @@ const Contact = () => {
 
   const sendEmail = (e) => {
     e.preventDefault();
-    setIsSending(true); // Start loading
+    setIsSending(true);
 
     emailjs
       .sendForm(
@@ -95,8 +95,8 @@ const Contact = () => {
             </p>
             <div className="flex gap-4">
               {[
-                { icon: <FiFacebook />, link: "#" },
-                { icon: <FiInstagram />, link: "#" },
+                { icon: <FiFacebook />, link: "https://www.facebook.com/koushik.sujan.7#" },
+                { icon: <FiInstagram />, link: "https://www.instagram.com/koushik_sujan" },
               ].map((social, i) => (
                 <motion.a
                   key={i}

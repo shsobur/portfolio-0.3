@@ -22,3 +22,82 @@
 body {
   font-family: var(--font-body);
 }
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   PERFORMANCE: CSS keyframe animations
+   These replace 5 Framer Motion "repeat: Infinity" instances in Home.jsx.
+   CSS animations run entirely on the GPU compositor — zero JS thread cost,
+   zero Framer Motion scheduler overhead, smooth even on low-end devices.
+───────────────────────────────────────────────────────────────────────────── */
+
+/* Orb 1 — top-right purple orb (was: motion.div 4s repeat:Infinity) */
+@keyframes orb-float-1 {
+  0%,
+  100% {
+    transform: translateY(0px) translateX(0px);
+  }
+  50% {
+    transform: translateY(-18px) translateX(8px);
+  }
+}
+
+/* Orb 2 — bottom-left orange orb (was: motion.div 5s repeat:Infinity delay:1s) */
+@keyframes orb-float-2 {
+  0%,
+  100% {
+    transform: translateY(0px) translateX(0px);
+  }
+  50% {
+    transform: translateY(14px) translateX(-8px);
+  }
+}
+
+/* Orb 3 — mid-right pink orb (was: motion.div 3.5s repeat:Infinity delay:0.5s) */
+@keyframes orb-float-3 {
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+/* Card bob — image card float (was: motion.div 6s repeat:Infinity) */
+@keyframes card-bob {
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-14px);
+  }
+}
+
+/* Scroll indicator pulse (was: motion.div opacity 2.5s repeat:Infinity) */
+@keyframes fade-pulse {
+  0%,
+  100% {
+    opacity: 0.3;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}
+
+/* ── Utility classes used in Home.jsx ── */
+.orb-float-1 {
+  animation: orb-float-1 4s ease-in-out infinite;
+}
+.orb-float-2 {
+  animation: orb-float-2 5s ease-in-out 1s infinite;
+}
+.orb-float-3 {
+  animation: orb-float-3 3.5s ease-in-out 0.5s infinite;
+}
+.card-bob {
+  animation: card-bob 6s ease-in-out infinite;
+}
+.scroll-pulse {
+  animation: fade-pulse 2.5s ease-in-out infinite;
+}

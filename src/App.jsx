@@ -8,29 +8,30 @@ import Contact from "./Pages/Contact/Contact";
 
 const App = () => {
   useEffect(() => {
-    // Initialize Lenis
     const lenis = new Lenis({
       duration: 1.2,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       smoothWheel: true,
     });
 
+    // FIX: store rafId so we can cancel it on unmount
+    // Original bug: requestAnimationFrame(raf) ran forever even after lenis.destroy()
+    let rafId;
     function raf(time) {
       lenis.raf(time);
-      requestAnimationFrame(raf);
+      rafId = requestAnimationFrame(raf);
     }
-
-    requestAnimationFrame(raf);
+    rafId = requestAnimationFrame(raf);
 
     return () => {
-      lenis.destroy();
+      cancelAnimationFrame(rafId); // stop the loop first
+      lenis.destroy(); // then clean up lenis
     };
   }, []);
 
   return (
     <Background>
       <Navbar />
-      {/* Add IDs here so we can scroll to them */}
       <div id="home">
         <Home />
       </div>
@@ -38,9 +39,8 @@ const App = () => {
         <About />
       </div>
       <div id="contact">
-        <Contact></Contact>
+        <Contact />
       </div>
-      {/* <div id="work"><Work /></div> */}
     </Background>
   );
 };
