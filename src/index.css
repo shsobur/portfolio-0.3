@@ -85,6 +85,87 @@ body {
   }
 }
 
+/* Background blob float animations optimized for GPU compositing */
+@keyframes blob-float-1 {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(18px, -16px, 0) scale(1.05);
+  }
+}
+
+@keyframes blob-float-2 {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(-20px, 20px, 0) scale(1.06);
+  }
+}
+
+@keyframes blob-float-3 {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(8px, -12px, 0) scale(1.04);
+  }
+}
+
+@keyframes blob-float-4 {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(-16px, 14px, 0) scale(1.03);
+  }
+}
+
+@keyframes blob-float-5 {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(10px, 10px, 0) scale(1.04);
+  }
+}
+
+.blob-float-1 {
+  animation: blob-float-1 22s ease-in-out infinite alternate;
+}
+
+.blob-float-2 {
+  animation: blob-float-2 24s ease-in-out 1s infinite alternate;
+}
+
+.blob-float-3 {
+  animation: blob-float-3 20s ease-in-out 0.5s infinite alternate;
+}
+
+.blob-float-4 {
+  animation: blob-float-4 26s ease-in-out 0.7s infinite alternate;
+}
+
+.blob-float-5 {
+  animation: blob-float-5 21s ease-in-out 1.2s infinite alternate;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .blob-float-1,
+  .blob-float-2,
+  .blob-float-3,
+  .blob-float-4,
+  .blob-float-5 {
+    animation: none !important;
+  }
+}
+
 /* ── Utility classes used in Home.jsx ── */
 .orb-float-1 {
   animation: orb-float-1 4s ease-in-out infinite;
