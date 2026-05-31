@@ -2,16 +2,16 @@ import { useEffect, useState } from "react";
 
 const DESKTOP_BLOBS = [
   {
-    wrapperClass: "absolute -top-20 -left-20 w-[500px] h-[500px] blob-float-1",
+    wrapperClass: "absolute top-20 left-20 w-[500px] h-[500px] blob-float-1",
     bg: "radial-gradient(circle at 40% 40%, rgba(139,92,246,0.55) 0%, rgba(167,139,250,0.25) 55%, transparent 80%)",
   },
   {
     wrapperClass:
-      "absolute -bottom-24 -right-16 w-[480px] h-[480px] blob-float-2",
+      "absolute bottom-24 right-16 w-[480px] h-[480px] blob-float-2",
     bg: "radial-gradient(circle at 60% 60%, rgba(236,72,153,0.50) 0%, rgba(251,113,133,0.20) 55%, transparent 80%)",
   },
   {
-    wrapperClass: "absolute top-1/3 -right-20 w-[420px] h-[420px] blob-float-3",
+    wrapperClass: "absolute top-1/3 right-20 w-[420px] h-[420px] blob-float-3",
     bg: "radial-gradient(circle at 50% 50%, rgba(251,146,60,0.45) 0%, rgba(252,211,77,0.20) 55%, transparent 80%)",
   },
   {
@@ -27,11 +27,11 @@ const DESKTOP_BLOBS = [
 
 const MOBILE_BLOBS = [
   {
-    wrapperClass: "absolute -top-10 -left-10 w-[200px] h-[200px]",
+    wrapperClass: "absolute top-10 left-10 w-[200px] h-[200px]",
     bg: "radial-gradient(circle at 40% 40%, rgba(139,92,246,0.55) 0%, rgba(167,139,250,0.25) 55%, transparent 80%)",
   },
   {
-    wrapperClass: "absolute top-1/2 -right-12 w-[180px] h-[180px]",
+    wrapperClass: "absolute top-1/2 right-12 w-[180px] h-[180px]",
     bg: "radial-gradient(circle at 60% 60%, rgba(236,72,153,0.50) 0%, rgba(251,113,133,0.20) 55%, transparent 80%)",
   },
   {
@@ -42,21 +42,12 @@ const MOBILE_BLOBS = [
 
 const Background = ({ children }) => {
   const [isMobile, setIsMobile] = useState(false);
-  const [shouldAnimate, setShouldAnimate] = useState(false);
 
   useEffect(() => {
     const updateMode = () => {
-      const smallScreen = window.matchMedia("(max-width: 767px)").matches;
-      const touchDevice =
-        "ontouchstart" in window || navigator.maxTouchPoints > 0;
-      const prefersReducedMotion = window.matchMedia(
-        "(prefers-reduced-motion: reduce)",
-      ).matches;
-      const isLowEnd = navigator.hardwareConcurrency <= 4;
-
-      const mobile = smallScreen || touchDevice;
+      // Consistent 640px breakpoint as your senior said
+      const mobile = window.matchMedia("(max-width: 639px)").matches;
       setIsMobile(mobile);
-      setShouldAnimate(!mobile && !prefersReducedMotion && !isLowEnd);
     };
 
     updateMode();
@@ -75,36 +66,14 @@ const Background = ({ children }) => {
       }}
     >
       <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
-        {blobs.map((blob, i) => {
-          const className = blob.wrapperClass
-            .split(" ")
-            .filter((cls) => shouldAnimate || !cls.startsWith("blob-float-"))
-            .join(" ");
-
-          return (
+        {blobs.map((blob, i) => (
+          <div key={i} className={blob.wrapperClass} style={blob.wrapperStyle}>
             <div
-              key={i}
-              className={className}
-              style={{
-                ...blob.wrapperStyle,
-                transform: "translate3d(0, 0, 0)",
-                willChange: "transform",
-                backfaceVisibility: "hidden",
-              }}
-            >
-              <div
-                className="w-full h-full rounded-full"
-                style={{
-                  background: blob.bg,
-                  transform: "translate3d(0, 0, 0)",
-                  willChange: "transform",
-                  backfaceVisibility: "hidden",
-                }}
-              />
-            </div>
-          );
-        })}
-
+              className="w-full h-full rounded-full"
+              style={{ background: blob.bg }}
+            />
+          </div>
+        ))}
         <div
           className="absolute inset-0"
           style={{ background: "rgba(255,255,255,0.07)" }}

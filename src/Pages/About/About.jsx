@@ -1,9 +1,10 @@
 import { motion } from "framer-motion";
+import { useState } from "react";
 import { SiCanva } from "react-icons/si";
 import { FiCpu, FiLayout, FiScissors, FiLayers } from "react-icons/fi";
 import { TbBrandAdobePhotoshop, TbBrandAdobePremier } from "react-icons/tb";
 
-const fadeUp = (delay = 0) => ({
+const fadeUpMotion = (delay = 0) => ({
   initial: { opacity: 0, y: 28 },
   whileInView: { opacity: 1, y: 0 },
   viewport: { once: true },
@@ -11,6 +12,19 @@ const fadeUp = (delay = 0) => ({
 });
 
 const About = () => {
+  const [shouldAnimate] = useState(() => {
+    if (typeof window === "undefined") return false;
+    const isTouch = "ontouchstart" in window || navigator.maxTouchPoints > 0;
+    const prefersReducedMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+    const isLowEnd = navigator.hardwareConcurrency <= 4;
+    const isNarrowScreen = window.innerWidth <= 435;
+    return !isTouch && !prefersReducedMotion && !isLowEnd && !isNarrowScreen;
+  });
+
+  const fadeUp = (delay = 0) =>
+    shouldAnimate ? fadeUpMotion(delay) : { initial: { opacity: 1, y: 0 } };
   const skills = [
     {
       name: "Adobe Premiere Pro",
@@ -108,12 +122,12 @@ const About = () => {
         </div>
 
         {/* RIGHT: SKILLS / BENTO GRID */}
-        <div className="lg:col-span-5 grid grid-cols-2 gap-4 h-fit">
+        <div className="lg:col-span-5 grid grid-cols-1 md:grid-cols-2 gap-4 h-fit">
           {skills.map((skill, index) => (
             <motion.div
               key={index}
               {...fadeUp(0.1 + index * 0.05)}
-              whileHover={{ y: -5, scale: 1.02 }}
+              whileHover={shouldAnimate ? { y: -5, scale: 1.02 } : undefined}
               className="p-6 rounded-[2rem] flex flex-col gap-4 justify-between"
               style={{
                 // No backdrop‑filter – soft gradient + border looks almost identical

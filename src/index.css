@@ -166,6 +166,26 @@ body {
   }
 }
 
+@media (max-width: 639px) {
+  .blob-float-1,
+  .blob-float-2,
+  .blob-float-3,
+  .blob-float-4,
+  .blob-float-5 {
+    animation: none !important;
+  }
+}
+
+@media (max-width: 639px) {
+  .orb-float-1,
+  .orb-float-2,
+  .orb-float-3,
+  .card-bob,
+  .scroll-pulse {
+    animation: none !important;
+  }
+}
+
 /* ── Utility classes used in Home.jsx ── */
 .orb-float-1 {
   animation: orb-float-1 4s ease-in-out infinite;
