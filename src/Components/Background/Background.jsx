@@ -1,52 +1,39 @@
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 
-// ─── Blob config (split out for clarity) ────────────────────────────────────
+// ─── Blob config ──────────────────────────────────────────────────
+// No filter blur in the config – we rely on the radial gradient's
+// own soft edges (transparent at 80%) for a lightweight blur effect.
 const BLOBS = [
   {
-    // Blob 1 — deep violet (top-left)
     wrapperClass: "absolute -top-20 -left-20 w-[500px] h-[500px]",
-    bg: "radial-gradient(circle at 40% 40%, rgba(139,92,246,0.60) 0%, rgba(167,139,250,0.30) 55%, transparent 80%)",
-    blur: "40px", // was 72px — reduced for GPU budget
+    bg: "radial-gradient(circle at 40% 40%, rgba(139,92,246,0.55) 0%, rgba(167,139,250,0.25) 55%, transparent 80%)",
   },
   {
-    // Blob 2 — hot pink (bottom-right)
     wrapperClass: "absolute -bottom-24 -right-16 w-[480px] h-[480px]",
-    bg: "radial-gradient(circle at 60% 60%, rgba(236,72,153,0.55) 0%, rgba(251,113,133,0.25) 55%, transparent 80%)",
-    blur: "40px", // was 72px
+    bg: "radial-gradient(circle at 60% 60%, rgba(236,72,153,0.50) 0%, rgba(251,113,133,0.20) 55%, transparent 80%)",
   },
   {
-    // Blob 3 — amber/orange (mid-right)
     wrapperClass: "absolute top-1/3 -right-20 w-[420px] h-[420px]",
-    bg: "radial-gradient(circle at 50% 50%, rgba(251,146,60,0.50) 0%, rgba(252,211,77,0.25) 55%, transparent 80%)",
-    blur: "45px", // was 80px
+    bg: "radial-gradient(circle at 50% 50%, rgba(251,146,60,0.45) 0%, rgba(252,211,77,0.20) 55%, transparent 80%)",
   },
   {
-    // Blob 4 — electric cyan/indigo (bottom-left)
     wrapperClass: "absolute bottom-0 left-1/4 w-[380px] h-[380px]",
-    bg: "radial-gradient(circle at 50% 50%, rgba(56,189,248,0.45) 0%, rgba(99,102,241,0.20) 55%, transparent 80%)",
-    blur: "40px", // was 72px
+    bg: "radial-gradient(circle at 50% 50%, rgba(56,189,248,0.40) 0%, rgba(99,102,241,0.18) 55%, transparent 80%)",
   },
   {
-    // Blob 5 — accent purple/pink (center)
-    // NOTE: uses wrapperStyle instead of translate classes so GSAP doesn't conflict
     wrapperClass: "absolute w-[320px] h-[320px]",
     wrapperStyle: { top: "calc(50% - 160px)", left: "calc(50% - 160px)" },
-    bg: "radial-gradient(circle at 50% 50%, rgba(168,85,247,0.30) 0%, rgba(236,72,153,0.15) 60%, transparent 80%)",
-    blur: "45px", // was 80px
+    bg: "radial-gradient(circle at 50% 50%, rgba(168,85,247,0.25) 0%, rgba(236,72,153,0.12) 60%, transparent 80%)",
   },
 ];
 
 const Background = ({ children }) => {
-  // TWO-WRAPPER APPROACH:
-  // mouseRefs = outer div → only mouse parallax moves this
-  // floatRefs = inner div → only float animation moves this
-  // They never share the same GSAP target, so no conflicts, no drift
-  const mouseRefs = useRef([]);
-  const floatRefs = useRef([]);
+  const mouseRefs = useRef([]); // outer wrapper – mouse parallax only
+  const floatRefs = useRef([]); // inner div – float animation only
 
   useEffect(() => {
-    // ── Float animation on inner blob divs ──────────────────────────────────
+    // ── Float animation (inner blobs) – unchanged structure ──────
     floatRefs.current.forEach((blob, i) => {
       if (!blob) return;
       gsap.to(blob, {
@@ -61,11 +48,16 @@ const Background = ({ children }) => {
       });
     });
 
-    // ── RAF-throttled mouse parallax on outer wrapper divs ──────────────────
-    // Key fixes vs original:
-    //   1. RAF throttle — schedules at most 1 update per frame (was: every pixel)
-    //   2. Absolute x/y — no cumulative += drift
-    //   3. passive: true — browser can scroll-optimize without waiting for JS
+    // ── Mouse parallax with gsap.quickTo() ───────────────────────
+    // quickTo functions are created ONCE – they update the same tween
+    // without any allocation overhead each frame.
+    const quickX = mouseRefs.current.map((el) =>
+      el ? gsap.quickTo(el, "x", { duration: 2.5, ease: "power2.out" }) : null,
+    );
+    const quickY = mouseRefs.current.map((el) =>
+      el ? gsap.quickTo(el, "y", { duration: 2.5, ease: "power2.out" }) : null,
+    );
+
     let rafId = null;
     let mx = 0;
     let my = 0;
@@ -73,21 +65,18 @@ const Background = ({ children }) => {
     const onMouseMove = (e) => {
       mx = e.clientX;
       my = e.clientY;
-      if (rafId) return; // already scheduled this frame, skip
+      if (rafId) return;
       rafId = requestAnimationFrame(() => {
         const cx = (mx / window.innerWidth - 0.5) * 2;
         const cy = (my / window.innerHeight - 0.5) * 2;
-        mouseRefs.current.forEach((el, i) => {
-          if (!el) return;
-          const depth = (i + 1) * 10;
-          gsap.to(el, {
-            x: cx * depth, // absolute — not += (no more drift)
-            y: cy * depth,
-            duration: 2.5,
-            ease: "power2.out",
-            overwrite: "auto",
-          });
+
+        quickX.forEach((fn, i) => {
+          if (fn) fn(cx * (i + 1) * 10);
         });
+        quickY.forEach((fn, i) => {
+          if (fn) fn(cy * (i + 1) * 10);
+        });
+
         rafId = null;
       });
     };
@@ -97,8 +86,8 @@ const Background = ({ children }) => {
     return () => {
       window.removeEventListener("mousemove", onMouseMove);
       if (rafId) cancelAnimationFrame(rafId);
+      // Kill all active float tweens
       gsap.killTweensOf(floatRefs.current);
-      gsap.killTweensOf(mouseRefs.current);
     };
   }, []);
 
@@ -118,7 +107,10 @@ const Background = ({ children }) => {
             ref={(el) => (mouseRefs.current[i] = el)}
             className={blob.wrapperClass}
             style={{
-              willChange: "transform", // pre-promote to GPU layer
+              // GPU promotion with translate3d instead of will-change
+              // to avoid over‑promotion on memory‑constrained devices.
+              transform: "translate3d(0, 0, 0)",
+              contain: "layout style paint", // hint to browser
               ...blob.wrapperStyle,
             }}
           >
@@ -127,14 +119,16 @@ const Background = ({ children }) => {
               className="w-full h-full rounded-full"
               style={{
                 background: blob.bg,
-                filter: `blur(${blob.blur})`,
-                willChange: "transform", // pre-promote to GPU layer
+                // ⚠️ No filter blur! The radial gradient itself fades
+                // to transparent for a soft edge without extra paint cost.
+                transform: "translate3d(0, 0, 0)",
+                contain: "layout style paint",
               }}
             />
           </div>
         ))}
 
-        {/* Very subtle white glass sheen */}
+        {/* Subtle white glass sheen (static, cheap) */}
         <div
           className="absolute inset-0"
           style={{ background: "rgba(255,255,255,0.07)" }}

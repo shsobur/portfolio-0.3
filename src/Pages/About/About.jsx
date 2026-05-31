@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import {SiCanva } from "react-icons/si";
+import { SiCanva } from "react-icons/si";
 import { FiCpu, FiLayout, FiScissors, FiLayers } from "react-icons/fi";
 import { TbBrandAdobePhotoshop, TbBrandAdobePremier } from "react-icons/tb";
 
@@ -16,7 +16,10 @@ const About = () => {
       name: "Adobe Premiere Pro",
       icon: <TbBrandAdobePremier className="text-blue-500" />,
     },
-    { name: "Photoshop", icon: <TbBrandAdobePhotoshop className="text-blue-400" /> },
+    {
+      name: "Photoshop",
+      icon: <TbBrandAdobePhotoshop className="text-blue-400" />,
+    },
     { name: "CapCut", icon: <FiScissors className="text-red-500" /> },
     { name: "Canva", icon: <SiCanva className="text-cyan-400" /> },
     { name: "Music Sync", icon: <FiLayers className="text-purple-500" /> },
@@ -80,14 +83,16 @@ const About = () => {
             </p>
           </motion.div>
 
-          {/* Role Badge */}
+          {/* Role Badge – no backdrop blur */}
           <motion.div
             {...fadeUp(0.3)}
             className="flex items-center gap-4 p-4 rounded-2xl w-fit"
             style={{
-              background: "rgba(255, 255, 255, 0.4)",
-              backdropFilter: "blur(20px)",
-              border: "1px solid rgba(255, 255, 255, 0.6)",
+              // Replace backdrop‑filter with a semi‑opaque gradient
+              background:
+                "linear-gradient(135deg, rgba(255,255,255,0.65) 0%, rgba(255,255,255,0.45) 100%)",
+              border: "1px solid rgba(255, 255, 255, 0.7)",
+              boxShadow: "0 8px 24px rgba(124,58,237,0.08)",
             }}
           >
             <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-600 to-pink-500 flex items-center justify-center text-white text-xl">
@@ -111,8 +116,9 @@ const About = () => {
               whileHover={{ y: -5, scale: 1.02 }}
               className="p-6 rounded-[2rem] flex flex-col gap-4 justify-between"
               style={{
-                background: "rgba(255, 255, 255, 0.35)",
-                backdropFilter: "blur(28px)",
+                // No backdrop‑filter – soft gradient + border looks almost identical
+                background:
+                  "linear-gradient(135deg, rgba(255,255,255,0.55) 0%, rgba(255,255,255,0.35) 100%)",
                 border: "2px solid rgba(255, 255, 255, 0.78)",
                 boxShadow: "0 20px 40px rgba(0,0,0,0.05)",
               }}
@@ -124,7 +130,7 @@ const About = () => {
             </motion.div>
           ))}
 
-          {/* A Call to Action Small Box */}
+          {/* Philosophy box – keep small blur because it's static, or replace with gradient */}
           <motion.div
             {...fadeUp(0.4)}
             className="col-span-2 p-8 rounded-[2rem] bg-slate-900 text-white flex flex-col gap-2 overflow-hidden relative group"
@@ -135,7 +141,8 @@ const About = () => {
             <p className="font-heading text-2xl">
               "Creativity is the result of precision and passion."
             </p>
-            <div className="absolute -bottom-4 -right-4 w-24 h-24 bg-purple-500/20 blur-2xl group-hover:bg-pink-500/30 transition-colors" />
+            {/* Static gradient glow instead of blur (cheaper) */}
+            <div className="absolute -bottom-4 -right-4 w-24 h-24 bg-purple-500/20 group-hover:bg-pink-500/30 transition-colors rounded-full" />
           </motion.div>
         </div>
       </div>

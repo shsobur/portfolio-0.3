@@ -12,7 +12,6 @@ const navItems = [
 const Navbar = () => {
   const [active, setActive] = useState("home");
 
-  // 1. Scroll Handler
   const scrollToSection = (id) => {
     const element = document.getElementById(id);
     if (element) {
@@ -20,7 +19,6 @@ const Navbar = () => {
     }
   };
 
-  // 2. Intersection Observer Logic (Smart Highlighting)
   useEffect(() => {
     const observerOptions = {
       root: null,
@@ -51,12 +49,19 @@ const Navbar = () => {
 
   return (
     <nav className="fixed bottom-8 left-1/2 -translate-x-1/2 z-[100] w-fit">
-      <div className="flex items-center gap-1 px-2 py-2 bg-white/20 backdrop-blur-2xl border border-white/30 rounded-full shadow-[0_20px_50px_rgba(0,0,0,0.15)]">
+      {/* ── Container: no backdrop-blur → cheap static frosted look ── */}
+      <div
+        className="flex items-center gap-1 px-2 py-2 rounded-full border border-white/50 shadow-[0_20px_50px_rgba(0,0,0,0.15)]"
+        style={{
+          // Slightly more opaque white gives the glass feeling without blur
+          background: "rgba(255, 255, 255, 0.55)",
+        }}
+      >
         {navItems.map((item) => (
           <button
             key={item.id}
             onClick={() => scrollToSection(item.id)}
-            className="relative px-3.5 py-2.5 sm:px-6 sm:py-2 rounded-full text-[10px] sm:text-xs font-bold uppercasetracking-[0.2em] transition-all duration-300"
+            className="relative px-3.5 py-2.5 sm:px-6 sm:py-2 rounded-full text-[10px] sm:text-xs font-bold uppercase tracking-[0.2em] transition-all duration-300"
           >
             {active === item.id && (
               <motion.div

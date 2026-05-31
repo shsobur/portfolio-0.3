@@ -95,15 +95,22 @@ const Contact = () => {
             </p>
             <div className="flex gap-4">
               {[
-                { icon: <FiFacebook />, link: "https://www.facebook.com/koushik.sujan.7#" },
-                { icon: <FiInstagram />, link: "https://www.instagram.com/koushik_sujan" },
+                {
+                  icon: <FiFacebook />,
+                  link: "https://www.facebook.com/koushik.sujan.7#",
+                },
+                {
+                  icon: <FiInstagram />,
+                  link: "https://www.instagram.com/koushik_sujan",
+                },
               ].map((social, i) => (
                 <motion.a
                   key={i}
                   href={social.link}
                   target="_blank"
                   whileHover={{ y: -5, scale: 1.1 }}
-                  className="w-14 h-14 rounded-2xl flex items-center justify-center text-xl bg-white/40 border border-white/80 text-purple-600 backdrop-blur-xl shadow-sm"
+                  // No backdrop-blur → simple semi‑opaque background
+                  className="w-14 h-14 rounded-2xl flex items-center justify-center text-xl bg-white/70 border border-white/80 text-purple-600 shadow-sm"
                 >
                   {social.icon}
                 </motion.a>
@@ -111,7 +118,8 @@ const Contact = () => {
               <motion.button
                 onClick={() => setShowQR(true)}
                 whileHover={{ y: -5, scale: 1.1 }}
-                className="w-14 h-14 rounded-2xl flex items-center justify-center text-xl bg-[#25D366]/10 border border-[#25D366]/30 text-[#25D366] backdrop-blur-xl shadow-sm"
+                // No backdrop-blur here either
+                className="w-14 h-14 rounded-2xl flex items-center justify-center text-xl bg-[#25D366]/20 border border-[#25D366]/30 text-[#25D366] shadow-sm"
               >
                 <FaWhatsapp />
               </motion.button>
@@ -119,13 +127,14 @@ const Contact = () => {
           </motion.div>
         </div>
 
-        {/* RIGHT SIDE: The Glass Form */}
+        {/* RIGHT SIDE: The Glass Form – no blur */}
         <motion.div
           {...fadeUp(0.4)}
           className="lg:col-span-7 relative p-8 md:p-10 rounded-[1.5rem]"
           style={{
-            background: "rgba(255, 255, 255, 0.4)",
-            backdropFilter: "blur(32px)",
+            // Replace blur with a gradient that still looks frosted
+            background:
+              "linear-gradient(135deg, rgba(255,255,255,0.6) 0%, rgba(255,255,255,0.4) 100%)",
             border: "2px solid rgba(255, 255, 255, 0.8)",
             boxShadow: "0 32px 80px rgba(124, 58, 237, 0.12)",
           }}
@@ -142,7 +151,7 @@ const Contact = () => {
                   placeholder="Name"
                   required
                   disabled={isSending}
-                  className="w-full px-3 py-2 rounded-lg bg-white/60 border border-white focus:border-purple-400 outline-none transition-all text-sm disabled:opacity-50"
+                  className="w-full px-3 py-2 rounded-lg bg-white/70 border border-white focus:border-purple-400 outline-none transition-all text-sm disabled:opacity-50"
                 />
               </div>
               <div className="flex flex-col gap-2.5">
@@ -155,7 +164,7 @@ const Contact = () => {
                   placeholder="Email"
                   required
                   disabled={isSending}
-                  className="w-full px-3 py-2 rounded-lg bg-white/60 border border-white focus:border-purple-400 outline-none transition-all text-sm disabled:opacity-50"
+                  className="w-full px-3 py-2 rounded-lg bg-white/70 border border-white focus:border-purple-400 outline-none transition-all text-sm disabled:opacity-50"
                 />
               </div>
             </div>
@@ -169,7 +178,7 @@ const Contact = () => {
                 placeholder="How can I help you stand out?"
                 required
                 disabled={isSending}
-                className="w-full px-3 py-2 rounded-lg bg-white/60 border border-white focus:border-purple-400 outline-none transition-all text-sm resize-none disabled:opacity-50"
+                className="w-full px-3 py-2 rounded-lg bg-white/70 border border-white focus:border-purple-400 outline-none transition-all text-sm resize-none disabled:opacity-50"
               ></textarea>
             </div>
 
@@ -178,7 +187,9 @@ const Contact = () => {
               whileTap={!isSending ? { scale: 0.98 } : {}}
               type="submit"
               disabled={isSending}
-              className={`flex items-center justify-center gap-3 py-5 rounded-2xl text-white font-bold uppercase tracking-widest text-xs transition-all ${isSending ? "opacity-70 cursor-not-allowed" : ""}`}
+              className={`flex items-center justify-center gap-3 py-5 rounded-2xl text-white font-bold uppercase tracking-widest text-xs transition-all ${
+                isSending ? "opacity-70 cursor-not-allowed" : ""
+              }`}
               style={{
                 background: "linear-gradient(135deg, #7c3aed, #ec4899)",
                 boxShadow: "0 10px 30px rgba(124, 58, 237, 0.4)",
@@ -196,14 +207,14 @@ const Contact = () => {
             </motion.button>
           </form>
 
-          {/* SUCCESS OVERLAY */}
+          {/* SUCCESS OVERLAY – no blur, just a solid light background */}
           <AnimatePresence>
             {isSuccess && (
               <motion.div
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.9 }}
-                className="absolute inset-0 z-20 flex flex-col items-center justify-center rounded-[1.5rem] bg-white/95 backdrop-blur-md text-center p-10"
+                className="absolute inset-0 z-20 flex flex-col items-center justify-center rounded-[1.5rem] bg-white/90 text-center p-10"
               >
                 <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mb-6">
                   <FiCheckCircle className="text-4xl text-green-500" />
@@ -225,7 +236,7 @@ const Contact = () => {
             )}
           </AnimatePresence>
 
-          {/* CUSTOM ERROR OVERLAY */}
+          {/* CUSTOM ERROR OVERLAY – unchanged (no blur) */}
           <AnimatePresence>
             {isError && (
               <motion.div
@@ -249,7 +260,7 @@ const Contact = () => {
         </motion.div>
       </div>
 
-      {/* WHATSAPP MODAL remains the same... */}
+      {/* WHATSAPP MODAL – no blur, just dark transparent overlay */}
       <AnimatePresence>
         {showQR && (
           <motion.div
@@ -257,7 +268,8 @@ const Contact = () => {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={() => setShowQR(false)}
-            className="fixed inset-0 z-[200] flex items-center justify-center p-6 bg-black/60 backdrop-blur-md cursor-pointer"
+            // Simple dark overlay, no backdrop-blur
+            className="fixed inset-0 z-[200] flex items-center justify-center p-6 bg-black/60 cursor-pointer"
           >
             <motion.div
               initial={{ scale: 0.9, y: 20 }}
