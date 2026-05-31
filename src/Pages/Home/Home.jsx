@@ -1,19 +1,6 @@
 import { motion, useReducedMotion } from "framer-motion";
 import { FiArrowRight, FiArrowDown } from "react-icons/fi";
-import { useState, useEffect } from "react";
-
-// Custom hook — single source of truth for mobile check
-const useIsMobile = () => {
-  const [isMobile, setIsMobile] = useState(false);
-  useEffect(() => {
-    const mq = window.matchMedia("(max-width: 639px)");
-    const update = () => setIsMobile(mq.matches);
-    update();
-    mq.addEventListener("change", update);
-    return () => mq.removeEventListener("change", update);
-  }, []);
-  return isMobile;
-};
+import useIsMobile from "../../Hooks/useIsMobile";
 
 // Entrance animation factory
 const fadeUp = (delay = 0) => ({
