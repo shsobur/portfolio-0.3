@@ -45,7 +45,6 @@ const Background = ({ children }) => {
 
   useEffect(() => {
     const updateMode = () => {
-      // Consistent 640px breakpoint as your senior said
       const mobile = window.matchMedia("(max-width: 639px)").matches;
       setIsMobile(mobile);
     };
@@ -59,12 +58,13 @@ const Background = ({ children }) => {
 
   return (
     <div
-      className="relative min-h-screen w-full overflow-hidden"
+      className="relative min-h-screen w-full"
       style={{
         background:
           "linear-gradient(135deg, #dde8ff 0%, #ede0ff 35%, #ffe0f0 65%, #fff3dc 100%)",
       }}
     >
+      {/* Blobs layer (fixed, behind everything) */}
       <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
         {blobs.map((blob, i) => (
           <div key={i} className={blob.wrapperClass} style={blob.wrapperStyle}>

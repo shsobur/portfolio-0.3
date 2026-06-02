@@ -2,23 +2,33 @@ import { motion, useReducedMotion } from "framer-motion";
 import { SiCanva } from "react-icons/si";
 import { FiCpu, FiLayout, FiScissors, FiLayers } from "react-icons/fi";
 import { TbBrandAdobePhotoshop, TbBrandAdobePremier } from "react-icons/tb";
-import useIsMobile from "../../Hooks/useIsMobile";
-
-const fadeUpMotion = (delay = 0) => ({
-  initial: { opacity: 0, y: 28 },
-  whileInView: { opacity: 1, y: 0 },
-  viewport: { once: true },
-  transition: { duration: 0.75, ease: [0.22, 1, 0.36, 1], delay },
-});
-
-const staticProps = { initial: false, animate: false };
 
 const About = () => {
-  const isMobile = useIsMobile();
   const prefersReducedMotion = useReducedMotion();
-  const noAnimate = isMobile || prefersReducedMotion;
 
-  const anim = (delay = 0) => (noAnimate ? staticProps : fadeUpMotion(delay));
+  // 1. Optimized Variants for a "Smooth Pop" effect
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1, // Elements appear one after another
+        delayChildren: 0.1,
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 30 }, // Start lower
+    visible: {
+      opacity: 1,
+      y: 0, // Slide up to position
+      transition: {
+        duration: 0.8,
+        ease: [0.215, 0.61, 0.355, 1], // Premium "out-back" feel
+      },
+    },
+  };
 
   const skills = [
     {
@@ -36,19 +46,25 @@ const About = () => {
   ];
 
   return (
-    <section className="relative min-h-screen flex flex-col justify-center px-6 md:px-12 lg:px-20 py-24">
-      <div className="max-w-7xl w-full mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16">
-        {/* LEFT: CONTENT SIDE */}
+    <section className="relative min-h-screen flex flex-col justify-center px-6 md:px-12 lg:px-20 py-24 overflow-hidden">
+      <motion.div
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.2 }} // Triggers when 20% visible
+        variants={containerVariants}
+        className="max-w-7xl w-full mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16"
+      >
+        {/* LEFT CONTENT */}
         <div className="lg:col-span-7 flex flex-col gap-8">
           <div className="flex flex-col gap-2">
             <motion.p
-              {...anim(0.1)}
+              variants={itemVariants}
               className="text-xs font-bold uppercase tracking-[0.3em] text-purple-600"
             >
               The Creator
             </motion.p>
             <motion.h2
-              {...anim(0.15)}
+              variants={itemVariants}
               className="font-black leading-tight tracking-tighter text-gray-900"
               style={{ fontSize: "clamp(48px, 8vw, 80px)" }}
             >
@@ -66,7 +82,7 @@ const About = () => {
           </div>
 
           <motion.div
-            {...anim(0.2)}
+            variants={itemVariants}
             className="flex flex-col gap-6 text-[16px] leading-relaxed text-gray-600 max-w-2xl"
           >
             <p>
@@ -79,28 +95,31 @@ const About = () => {
               for YouTube and social media.
             </p>
             <p>
-              My work is about more than just cutting clips; it's about{" "}
-              <strong className="text-gray-900">storytelling</strong>. From
-              smooth transitions and precise music synchronization to
-              captivating subtitles and high-end visual effects, I ensure every
-              frame serves a purpose.
+              My work includes video cutting, smooth transitions, subtitles,
+              music synchronization, and visual effects to make content more
+              engaging. I work with tools like
+              <strong className="text-gray-800">
+                {" "}
+                CapCut, Adobe Premiere Pro, Photoshop, and Canva{" "}
+              </strong>
+              to produce high-quality videos.
             </p>
             <p>
               I focus on creativity, attention to detail, and delivering content
-              that helps creators and brands stand out in a crowded digital
-              world.
+              that helps creators and brands stand out.
             </p>
           </motion.div>
 
           {/* Role Badge */}
           <motion.div
-            {...anim(0.3)}
+            variants={itemVariants}
             className="flex items-center gap-4 p-4 rounded-2xl w-fit"
             style={{
               background:
-                "linear-gradient(135deg, rgba(255,255,255,0.65) 0%, rgba(255,255,255,0.45) 100%)",
-              border: "1px solid rgba(255,255,255,0.7)",
+                "linear-gradient(135deg, rgba(255,255,255,0.7) 0%, rgba(255,255,255,0.5) 100%)",
+              border: "1px solid rgba(255,255,255,0.8)",
               boxShadow: "0 8px 24px rgba(124,58,237,0.08)",
+              willChange: "transform, opacity",
             }}
           >
             <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-600 to-pink-500 flex items-center justify-center text-white text-xl">
@@ -115,19 +134,27 @@ const About = () => {
           </motion.div>
         </div>
 
-        {/* RIGHT: SKILLS GRID */}
-        <div className="lg:col-span-5 grid grid-cols-1 md:grid-cols-2 gap-4 h-fit">
+        {/* RIGHT SKILLS GRID */}
+        <div className="lg:col-span-5 grid grid-cols-2 gap-4 h-fit">
           {skills.map((skill, index) => (
             <motion.div
               key={index}
-              {...anim(0.1 + index * 0.05)}
-              whileHover={noAnimate ? undefined : { y: -5, scale: 1.02 }}
+              variants={itemVariants}
+              whileHover={
+                prefersReducedMotion
+                  ? {}
+                  : {
+                      y: -8,
+                      transition: { duration: 0.3, ease: "easeOut" },
+                    }
+              }
               className="p-6 rounded-[2rem] flex flex-col gap-4 justify-between"
               style={{
                 background:
-                  "linear-gradient(135deg, rgba(255,255,255,0.55) 0%, rgba(255,255,255,0.35) 100%)",
-                border: "2px solid rgba(255,255,255,0.78)",
-                boxShadow: "0 20px 40px rgba(0,0,0,0.05)",
+                  "linear-gradient(135deg, rgba(255,255,255,0.6) 0%, rgba(255,255,255,0.4) 100%)",
+                border: "2px solid rgba(255,255,255,0.8)",
+                boxShadow: "0 20px 40px rgba(0,0,0,0.03)",
+                willChange: "transform",
               }}
             >
               <div className="text-3xl">{skill.icon}</div>
@@ -139,19 +166,27 @@ const About = () => {
 
           {/* Philosophy box */}
           <motion.div
-            {...anim(0.4)}
+            variants={itemVariants}
             className="col-span-2 p-8 rounded-[2rem] bg-slate-900 text-white flex flex-col gap-2 overflow-hidden relative group"
           >
             <p className="text-xs font-bold opacity-60 uppercase tracking-widest">
               Philosophy
             </p>
-            <p className="font-heading text-2xl">
+            <p className="font-heading text-2xl relative z-10">
               "Creativity is the result of precision and passion."
             </p>
-            <div className="absolute -bottom-4 -right-4 w-24 h-24 bg-purple-500/20 group-hover:bg-pink-500/30 transition-colors rounded-full" />
+            {/* Animated Glow - Very optimized */}
+            <motion.div
+              animate={{
+                scale: [1, 1.2, 1],
+                opacity: [0.3, 0.6, 0.3],
+              }}
+              transition={{ duration: 4, repeat: Infinity }}
+              className="absolute -bottom-10 -right-10 w-32 h-32 bg-purple-500/30 rounded-full blur-3xl"
+            />
           </motion.div>
         </div>
-      </div>
+      </motion.div>
     </section>
   );
 };

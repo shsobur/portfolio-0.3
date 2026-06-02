@@ -7,35 +7,42 @@ import {
   FiCheckCircle,
   FiX,
   FiLoader,
-  FiAlertCircle,
 } from "react-icons/fi";
 import { FaWhatsapp } from "react-icons/fa";
 import { QRCodeSVG } from "qrcode.react";
 import emailjs from "@emailjs/browser";
-import useIsMobile from "../../Hooks/useIsMobile";
-
-
-const fadeUpMotion = (delay = 0) => ({
-  initial: { opacity: 0, y: 24 },
-  whileInView: { opacity: 1, y: 0 },
-  viewport: { once: true },
-  transition: { duration: 0.7, ease: [0.22, 1, 0.36, 1], delay },
-});
-
-const staticProps = { initial: false, animate: false };
 
 const Contact = () => {
   const form = useRef();
   const [isSuccess, setIsSuccess] = useState(false);
-  const [isError, setIsError] = useState(false);
   const [isSending, setIsSending] = useState(false);
   const [showQR, setShowQR] = useState(false);
 
-  const isMobile = useIsMobile();
   const prefersReducedMotion = useReducedMotion();
-  const noAnimate = isMobile || prefersReducedMotion;
 
-  const anim = (delay = 0) => (noAnimate ? staticProps : fadeUpMotion(delay));
+  // Optimized variants for a professional slide-up effect
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.08,
+        delayChildren: 0.1,
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 30 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.8,
+        ease: [0.215, 0.61, 0.355, 1], // Smooth premium easing
+      },
+    },
+  };
 
   const whatsappNumber = "+8801991677898";
   const whatsappLink = `https://wa.me/${whatsappNumber}`;
@@ -56,28 +63,33 @@ const Contact = () => {
         setTimeout(() => setIsSuccess(false), 5000);
         e.target.reset();
       })
-      .catch((error) => {
-        console.log("FAILED...", error.text);
+      .catch(() => {
         setIsSending(false);
-        setIsError(true);
-        setTimeout(() => setIsError(false), 5000);
+        setIsSuccess(false);
+        setTimeout(() => setIsSuccess(false), 5000);
       });
   };
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center px-6 py-24">
-      <div className="max-w-7xl w-full mx-auto grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
-        {/* LEFT SIDE */}
+    <section className="relative min-h-screen flex items-center justify-center px-6 py-24 overflow-hidden">
+      <motion.div
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.15 }} // Triggers when 15% of section is visible
+        variants={containerVariants}
+        className="max-w-7xl w-full mx-auto grid grid-cols-1 lg:grid-cols-12 gap-16 items-center"
+      >
+        {/* LEFT SIDE: Heading & Socials */}
         <div className="lg:col-span-5 flex flex-col gap-10">
           <div className="flex font-heading flex-col gap-4 text-center lg:text-left">
             <motion.p
-              {...anim(0.1)}
+              variants={itemVariants}
               className="text-xs font-bold uppercase tracking-[0.4em] text-purple-600"
             >
               Get In Touch
             </motion.p>
             <motion.h2
-              {...anim(0.2)}
+              variants={itemVariants}
               className="font-black leading-[0.9] tracking-tighter text-gray-900"
               style={{ fontSize: "clamp(55px, 10vw, 95px)" }}
             >
@@ -95,13 +107,15 @@ const Contact = () => {
           </div>
 
           <motion.div
-            {...anim(0.3)}
+            variants={itemVariants}
             className="flex flex-col gap-8 items-center lg:items-start"
           >
             <p className="text-gray-500 text-lg max-w-sm leading-relaxed text-center lg:text-left">
               Have a vision? I have the tools. Send me a message or reach out
               via social media.
             </p>
+
+            {/* Social Icons with subtle hover */}
             <div className="flex gap-4">
               {[
                 {
@@ -117,17 +131,22 @@ const Contact = () => {
                   key={i}
                   href={social.link}
                   target="_blank"
-                  // No hover on mobile — tap targets don't need hover
-                  whileHover={noAnimate ? undefined : { y: -5, scale: 1.1 }}
-                  className="w-14 h-14 rounded-2xl flex items-center justify-center text-xl bg-white/70 border border-white/80 text-purple-600 shadow-sm"
+                  whileHover={
+                    prefersReducedMotion ? {} : { y: -5, scale: 1.05 }
+                  }
+                  whileTap={{ scale: 0.95 }}
+                  className="w-14 h-14 rounded-2xl flex items-center justify-center text-xl bg-white border border-gray-100 text-purple-600 shadow-sm"
+                  style={{ willChange: "transform" }}
                 >
                   {social.icon}
                 </motion.a>
               ))}
               <motion.button
                 onClick={() => setShowQR(true)}
-                whileHover={noAnimate ? undefined : { y: -5, scale: 1.1 }}
-                className="w-14 h-14 rounded-2xl flex items-center justify-center text-xl bg-[#25D366]/20 border border-[#25D366]/30 text-[#25D366] shadow-sm"
+                whileHover={prefersReducedMotion ? {} : { y: -5, scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="w-14 h-14 rounded-2xl flex items-center justify-center text-xl bg-[#25D366]/10 border border-[#25D366]/20 text-[#25D366]"
+                style={{ willChange: "transform" }}
               >
                 <FaWhatsapp />
               </motion.button>
@@ -135,15 +154,14 @@ const Contact = () => {
           </motion.div>
         </div>
 
-        {/* RIGHT SIDE: Form */}
+        {/* RIGHT SIDE: Optimized Form */}
         <motion.div
-          {...anim(0.4)}
-          className="lg:col-span-7 relative p-8 md:p-10 rounded-[1.5rem]"
+          variants={itemVariants}
+          className="lg:col-span-7 relative p-8 md:p-10 rounded-[2rem] bg-white/40 backdrop-blur-md"
           style={{
-            background:
-              "linear-gradient(135deg, rgba(255,255,255,0.6) 0%, rgba(255,255,255,0.4) 100%)",
             border: "2px solid rgba(255,255,255,0.8)",
-            boxShadow: "0 32px 80px rgba(124,58,237,0.12)",
+            boxShadow: "0 32px 80px rgba(124,58,237,0.06)",
+            willChange: "transform, opacity",
           }}
         >
           <form ref={form} onSubmit={sendEmail} className="flex flex-col gap-7">
@@ -158,7 +176,7 @@ const Contact = () => {
                   placeholder="Name"
                   required
                   disabled={isSending}
-                  className="w-full px-3 py-2 rounded-lg bg-white/70 border border-white focus:border-purple-400 outline-none transition-all text-sm disabled:opacity-50"
+                  className="w-full px-4 py-3 rounded-xl bg-white border border-gray-100 focus:border-purple-400 outline-none transition-all text-sm disabled:opacity-50"
                 />
               </div>
               <div className="flex flex-col gap-2.5">
@@ -171,7 +189,7 @@ const Contact = () => {
                   placeholder="Email"
                   required
                   disabled={isSending}
-                  className="w-full px-3 py-2 rounded-lg bg-white/70 border border-white focus:border-purple-400 outline-none transition-all text-sm disabled:opacity-50"
+                  className="w-full px-4 py-3 rounded-xl bg-white border border-gray-100 focus:border-purple-400 outline-none transition-all text-sm disabled:opacity-50"
                 />
               </div>
             </div>
@@ -181,30 +199,31 @@ const Contact = () => {
               </label>
               <textarea
                 name="message"
-                rows="5"
+                rows="4"
                 placeholder="How can I help you stand out?"
                 required
                 disabled={isSending}
-                className="w-full px-3 py-2 rounded-lg bg-white/70 border border-white focus:border-purple-400 outline-none transition-all text-sm resize-none disabled:opacity-50"
+                className="w-full px-4 py-3 rounded-xl bg-white border border-gray-100 focus:border-purple-400 outline-none transition-all text-sm resize-none disabled:opacity-50"
               />
             </div>
 
             <motion.button
-              whileHover={noAnimate || isSending ? undefined : { scale: 1.02 }}
-              whileTap={noAnimate || isSending ? undefined : { scale: 0.98 }}
+              whileHover={
+                prefersReducedMotion || isSending ? {} : { scale: 1.01 }
+              }
+              whileTap={
+                prefersReducedMotion || isSending ? {} : { scale: 0.98 }
+              }
               type="submit"
               disabled={isSending}
-              className={`flex items-center justify-center gap-3 py-5 rounded-2xl text-white font-bold uppercase tracking-widest text-xs transition-all ${isSending ? "opacity-70 cursor-not-allowed" : ""}`}
+              className="flex items-center justify-center gap-3 py-4 rounded-xl text-white font-bold uppercase tracking-widest text-xs transition-all"
               style={{
                 background: "linear-gradient(135deg, #7c3aed, #ec4899)",
-                boxShadow: "0 10px 30px rgba(124,58,237,0.4)",
+                boxShadow: "0 10px 25px rgba(124,58,237,0.25)",
               }}
             >
               {isSending ? (
-                <>
-                  <span>Sending</span>
-                  <FiLoader className="animate-spin text-lg" />
-                </>
+                <FiLoader className="animate-spin text-lg" />
               ) : (
                 <>
                   <span>Send Proposal</span>
@@ -214,59 +233,41 @@ const Contact = () => {
             </motion.button>
           </form>
 
-          {/* SUCCESS OVERLAY — keep AnimatePresence, it's functional feedback */}
+          {/* Success Overlay with smooth fade */}
           <AnimatePresence>
             {isSuccess && (
               <motion.div
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.9 }}
-                className="absolute inset-0 z-20 flex flex-col items-center justify-center rounded-[1.5rem] bg-white/90 text-center p-10"
+                initial={{ opacity: 0, backdropFilter: "blur(0px)" }}
+                animate={{ opacity: 1, backdropFilter: "blur(10px)" }}
+                exit={{ opacity: 0 }}
+                className="absolute inset-0 z-20 flex flex-col items-center justify-center rounded-[2rem] bg-white/80 text-center p-10"
               >
-                <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mb-6">
+                <motion.div
+                  initial={{ scale: 0.5, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mb-6"
+                >
                   <FiCheckCircle className="text-4xl text-green-500" />
-                </div>
-                <h3 className="text-3xl font-black text-gray-900 leading-tight">
+                </motion.div>
+                <h3 className="text-2xl font-black text-gray-900">
                   MESSAGE SENT!
                 </h3>
-                <p className="text-gray-500 mt-3 max-w-xs mx-auto">
-                  Thanks for reaching out. I'll get back to you shortly.
+                <p className="text-gray-500 mt-2">
+                  I'll get back to you shortly.
                 </p>
                 <button
                   onClick={() => setIsSuccess(false)}
-                  className="mt-8 text-xs font-bold uppercase tracking-widest text-purple-600 underline"
+                  className="mt-6 text-xs font-bold uppercase text-purple-600 underline"
                 >
-                  Send another
+                  Dismiss
                 </button>
               </motion.div>
             )}
           </AnimatePresence>
-
-          {/* ERROR TOAST — keep AnimatePresence, functional feedback */}
-          <AnimatePresence>
-            {isError && (
-              <motion.div
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: 10 }}
-                className="absolute inset-x-0 -bottom-20 z-30 flex items-center justify-center"
-              >
-                <div className="bg-red-500 text-white px-6 py-3 rounded-2xl shadow-xl flex items-center gap-3">
-                  <FiAlertCircle size={20} />
-                  <span className="text-xs font-bold tracking-wider uppercase">
-                    Something went wrong. Try again later.
-                  </span>
-                  <button onClick={() => setIsError(false)}>
-                    <FiX />
-                  </button>
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
         </motion.div>
-      </div>
+      </motion.div>
 
-      {/* WHATSAPP MODAL — keep animation, it's user-triggered not page animation */}
+      {/* WHATSAPP MODAL */}
       <AnimatePresence>
         {showQR && (
           <motion.div
@@ -274,50 +275,27 @@ const Contact = () => {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={() => setShowQR(false)}
-            className="fixed inset-0 z-[200] flex items-center justify-center p-6 bg-black/60 cursor-pointer"
+            className="fixed inset-0 z-[200] flex items-center justify-center p-6 bg-black/40 backdrop-blur-sm"
           >
             <motion.div
-              initial={{ scale: 0.9, y: 20 }}
-              animate={{ scale: 1, y: 0 }}
-              exit={{ scale: 0.9, y: 20 }}
+              initial={{ scale: 0.9, opacity: 0, y: 20 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.9, opacity: 0, y: 20 }}
               onClick={(e) => e.stopPropagation()}
-              className="relative max-w-sm w-full bg-white p-10 rounded-[3rem] shadow-2xl text-center cursor-default"
+              className="relative max-w-sm w-full bg-white p-8 rounded-[2.5rem] shadow-2xl text-center"
             >
+              <QRCodeSVG
+                value={whatsappLink}
+                size={200}
+                className="mx-auto mb-6"
+              />
+              <h4 className="text-xl font-bold text-gray-900">Scan to Chat</h4>
               <button
                 onClick={() => setShowQR(false)}
-                className="absolute top-6 right-6 text-gray-300 hover:text-black transition-colors"
+                className="mt-6 text-gray-400 hover:text-gray-900"
               >
                 <FiX size={24} />
               </button>
-              <div className="flex flex-col items-center gap-6">
-                <div className="p-4 bg-gray-50 rounded-[2rem] border-4 border-gray-100 shadow-inner">
-                  <QRCodeSVG
-                    value={whatsappLink}
-                    size={220}
-                    level="H"
-                    includeMargin
-                    fgColor="#000000"
-                    bgColor="transparent"
-                  />
-                </div>
-                <div>
-                  <h4 className="text-2xl font-black text-gray-900 tracking-tight">
-                    SCAN FOR WHATSAPP
-                  </h4>
-                  <p className="text-sm text-gray-500 mt-2 leading-relaxed">
-                    Scan this code to start a chat with me instantly.
-                  </p>
-                </div>
-
-                <a
-                  href={whatsappLink}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-xs font-bold uppercase tracking-widest text-green-500 bg-green-50 px-6 py-3 rounded-full hover:bg-green-100 transition-colors"
-                >
-                  Or click here to chat
-                </a>
-              </div>
             </motion.div>
           </motion.div>
         )}
