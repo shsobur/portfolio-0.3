@@ -80,10 +80,10 @@ const Home = () => {
             </motion.p>
             <motion.h1
               variants={itemVariants}
-              className="font-black leading-[0.88] tracking-[-0.04em] text-gray-900"
+              className="font-heading font-black uppercase leading-[0.88] tracking-[-0.04em] text-gray-900"
               style={{ fontSize: "clamp(60px, 12vw, 110px)" }}
             >
-              KAWSHIK
+              koushik
               <span className="bg-gradient-to-br from-purple-600 to-pink-500 bg-clip-text text-transparent">
                 .
               </span>

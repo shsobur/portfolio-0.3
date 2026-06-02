@@ -12,7 +12,7 @@ const About = () => {
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.1, // Elements appear one after another
+        staggerChildren: 0.1,
         delayChildren: 0.1,
       },
     },
@@ -50,7 +50,7 @@ const About = () => {
       <motion.div
         initial="hidden"
         whileInView="visible"
-        viewport={{ once: true, amount: 0.2 }} // Triggers when 20% visible
+        viewport={{ once: true, amount: 0.2 }}
         variants={containerVariants}
         className="max-w-7xl w-full mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16"
       >
@@ -65,8 +65,8 @@ const About = () => {
             </motion.p>
             <motion.h2
               variants={itemVariants}
-              className="font-black leading-tight tracking-tighter text-gray-900"
-              style={{ fontSize: "clamp(48px, 8vw, 80px)" }}
+              className="font-heading font-black uppercase leading-tight tracking-tighter text-gray-900"
+              style={{ fontSize: "clamp(50px, 11vw, 95px)" }}
             >
               BEYOND THE{" "}
               <span

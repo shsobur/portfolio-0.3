@@ -284,17 +284,43 @@ const Contact = () => {
               onClick={(e) => e.stopPropagation()}
               className="relative max-w-sm w-full bg-white p-8 rounded-[2.5rem] shadow-2xl text-center"
             >
-              <QRCodeSVG
-                value={whatsappLink}
-                size={200}
-                className="mx-auto mb-6"
-              />
+              {/* QR Code */}
+              <div className="p-4 bg-gray-50 rounded-[2rem] border-4 border-gray-100 shadow-inner mb-6">
+                <QRCodeSVG
+                  value={whatsappLink}
+                  size={200}
+                  level="H"
+                  includeMargin
+                  className="mx-auto"
+                />
+              </div>
+
               <h4 className="text-xl font-bold text-gray-900">Scan to Chat</h4>
+              <p className="text-sm text-gray-500 mt-2 leading-relaxed">
+                Scan this QR code or click below to start a chat instantly.
+              </p>
+
+              {/* Clickable WhatsApp redirect button */}
+              <a
+                href={whatsappLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-6 inline-flex items-center justify-center gap-2 w-full py-3 px-6 rounded-xl text-white font-bold uppercase tracking-widest text-xs transition-all hover:opacity-90"
+                style={{
+                  background: "linear-gradient(135deg, #25D366, #128C7E)",
+                  boxShadow: "0 8px 20px rgba(37, 211, 102, 0.3)",
+                }}
+              >
+                <FaWhatsapp />
+                <span>Open WhatsApp</span>
+              </a>
+
+              {/* Close button */}
               <button
                 onClick={() => setShowQR(false)}
-                className="mt-6 text-gray-400 hover:text-gray-900"
+                className="absolute top-4 right-4 w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-gray-400 hover:text-gray-900 hover:bg-gray-200 transition-colors"
               >
-                <FiX size={24} />
+                <FiX size={20} />
               </button>
             </motion.div>
           </motion.div>

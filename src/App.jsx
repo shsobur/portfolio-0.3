@@ -24,11 +24,9 @@ const App = () => {
       <div id="about">
         <About />
       </div>
-
       <div id="work">
         <Work />
       </div>
-
       <div id="contact">
         <Contact />
       </div>

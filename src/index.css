@@ -25,6 +25,7 @@ html {
 /* Default font for whole website */
 body {
   font-family: var(--font-body);
+  -webkit-overflow-scrolling: touch;
 }
 
 /* ─────────────────────────────────────────────────────────────────────────────
