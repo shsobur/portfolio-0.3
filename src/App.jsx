@@ -4,6 +4,7 @@ import About from "./Pages/About/About";
 import Navbar from "./Components/Navbar/Navbar";
 import Background from "./Components/Background/Background";
 import Contact from "./Pages/Contact/Contact";
+import Work from "./Pages/Work/Work";
 
 const App = () => {
   useEffect(() => {
@@ -23,6 +24,11 @@ const App = () => {
       <div id="about">
         <About />
       </div>
+
+      <div id="work">
+        <Work />
+      </div>
+
       <div id="contact">
         <Contact />
       </div>
