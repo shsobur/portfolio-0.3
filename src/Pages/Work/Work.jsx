@@ -85,7 +85,7 @@ const Work = () => {
           className="mb-16"
         >
           <p className="text-xs font-bold uppercase tracking-[0.4em] text-purple-600">
-            Portfolio
+            Best Works
           </p>
           <h2 className="font-black text-5xl md:text-8xl tracking-tighter text-gray-900 mt-3">
             MY{" "}

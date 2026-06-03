@@ -4,13 +4,21 @@ import { FiArrowRight, FiArrowDown } from "react-icons/fi";
 const Home = () => {
   const prefersReducedMotion = useReducedMotion();
 
+  // Scroll to section function (same logic as Navbar)
+  const scrollToSection = (id) => {
+    const element = document.getElementById(id);
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
   // 1. Main Container Variant (Orchestration)
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.15, // Items pop in one by one
+        staggerChildren: 0.15,
         delayChildren: 0.2,
       },
     },
@@ -24,7 +32,7 @@ const Home = () => {
       y: 0,
       transition: {
         duration: 0.8,
-        ease: [0.215, 0.61, 0.355, 1], // Smooth "Apple-style" easing
+        ease: [0.215, 0.61, 0.355, 1],
       },
     },
   };
@@ -101,9 +109,10 @@ const Home = () => {
             . Hook your audience from the first second.
           </motion.p>
 
-          {/* CTA Button */}
+          {/* CTA Button — now scrolls to Contact section */}
           <motion.div variants={itemVariants}>
             <motion.button
+              onClick={() => scrollToSection("contact")}
               whileHover={prefersReducedMotion ? {} : { scale: 1.03, y: -2 }}
               whileTap={{ scale: 0.97 }}
               className="group flex items-center gap-3 px-10 py-5 rounded-2xl text-white text-xs font-black uppercase tracking-widest transition-all"
@@ -124,7 +133,7 @@ const Home = () => {
           >
             <div>
               <p className="text-3xl font-black text-gray-900 leading-none">
-                500+
+                099+
               </p>
               <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400 mt-2">
                 Projects Done
@@ -169,14 +178,14 @@ const Home = () => {
                   "linear-gradient(135deg, rgba(255,255,255,0.7) 0%, rgba(255,255,255,0.4) 100%)",
                 border: "2px solid rgba(255,255,255,0.8)",
                 boxShadow: "0 40px 100px rgba(124,58,237,0.1)",
-                willChange: "transform", // Helps mobile GPU
+                willChange: "transform",
               }}
             >
               <div className="w-[300px] sm:w-[360px] h-[400px] sm:h-[480px] rounded-[2.2rem] overflow-hidden bg-gray-100">
                 <img
                   src="https://res.cloudinary.com/dmfsmcy2y/image/upload/v1780217982/image_f3utso.webp"
                   alt="Kawshik"
-                  loading="eager" // Landing page image should be eager
+                  loading="eager"
                   className="w-full h-full object-cover object-top"
                 />
               </div>
