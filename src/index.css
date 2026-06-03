@@ -171,6 +171,14 @@ body {
   }
 }
 
+@media (min-width: 768px) {
+  body,
+  a,
+  button {
+    cursor: none !important;
+  }
+}
+
 @media (max-width: 639px) {
   .blob-float-1,
   .blob-float-2,

@@ -43,7 +43,7 @@ const Home = () => {
   };
 
   return (
-    <section className="relative min-h-screen flex flex-col justify-center px-6 md:px-12 lg:px-20 py-24 md:py-0 overflow-hidden">
+    <section className="bg-transparent relative min-h-screen flex flex-col justify-center px-6 md:px-12 lg:px-20 py-24 md:py-0 overflow-hidden">
       <motion.div
         initial="hidden"
         animate="visible"

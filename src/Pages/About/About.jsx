@@ -46,7 +46,7 @@ const About = () => {
   ];
 
   return (
-    <section className="relative min-h-screen flex flex-col justify-center px-6 md:px-12 lg:px-20 py-24 overflow-hidden">
+    <section className="bg-transparent relative min-h-screen flex flex-col justify-center px-6 md:px-12 lg:px-20 py-24 overflow-hidden">
       <motion.div
         initial="hidden"
         whileInView="visible"

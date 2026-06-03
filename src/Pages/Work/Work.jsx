@@ -75,7 +75,7 @@ const Work = () => {
   };
 
   return (
-    <section className="relative min-h-screen px-6 md:px-12 lg:px-20 py-24 overflow-hidden bg-gray-50/30">
+    <section className="relative min-h-screen px-6 md:px-12 lg:px-20 py-24 overflow-hidden">
       <div className="max-w-7xl mx-auto">
         {/* SECTION HEADING */}
         <motion.div

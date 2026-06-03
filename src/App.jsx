@@ -5,6 +5,7 @@ import Navbar from "./Components/Navbar/Navbar";
 import Background from "./Components/Background/Background";
 import Contact from "./Pages/Contact/Contact";
 import Work from "./Pages/Work/Work";
+import CustomCursor from "./Components/CustomCursor/CustomCursor";
 
 const App = () => {
   useEffect(() => {
@@ -18,6 +19,7 @@ const App = () => {
   return (
     <Background>
       <Navbar />
+      <CustomCursor />
       <div id="home">
         <Home />
       </div>
